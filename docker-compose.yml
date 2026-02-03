@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    command: serve
+
+
+
+  schema-service:
+    build: ./schema-server
+    container_name: schema-service
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./data/schemas:/data/schemas:ro
+    environment:
+      SCHEMA_DIR: /data/schemas
+      LISTEN_HOST: 0.0.0.0
+      LISTEN_PORT: 5001
+    restart: unless-stopped
+
+
+
+  values-service:
+    build: ./values-server
+    container_name: values-service
+    ports:
+      - "5002:5002"
+    volumes:
+      - ./data/values:/data/values
+    environment:
+      VALUES_DIR: /data/values
+      LISTEN_HOST: 0.0.0.0
+      LISTEN_PORT: 5002
+    restart: unless-stopped
+
+
+
+  bot-service:
+    build: ./bot-server
+    container_name: bot-service
+    ports:
+      - "5003:5003"
+    environment:
+      LISTEN_HOST: 0.0.0.0
+      LISTEN_PORT: 5003
+      OLLAMA_URL: http://ollama:11434
+      SCHEMA_SERVICE_URL: http://schema-service:5001
+      VALUES_SERVICE_URL: http://values-service:5002
+    depends_on:
+      - ollama
+      - schema-service
+      - values-service
+    restart: unless-stopped
+
+
+
+volumes:
+  ollama_data:

@@ -1,0 +1,4 @@
+ollama_data/
+__pycache__/
+*.zip
+.DS_Store
