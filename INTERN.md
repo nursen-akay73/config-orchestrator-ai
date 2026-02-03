@@ -273,8 +273,7 @@ Bu proje, **AI ve mikroservis mimarisini** birleştirerek karmaşık JSON konfig
 ---
 
 **Proje Sahibi**: Nurşen Akay  
-**Tarih**: Şubat 2026  
-**Peak Games - DevOps Intern Case Study**
+
 ```
 
 **Kaydet:** `Cmd + S`
